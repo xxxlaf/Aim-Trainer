@@ -23,12 +23,12 @@ function ChangeColorMode() {
     }
 }
 
-SetDefaults();
-
 btn_play.addEventListener("click", function() {
-    
+    location.href = "game.html";
 });
 
 btn_color_mode.addEventListener("click", function() {
     ChangeColorMode();
 });
+
+SetDefaults();
