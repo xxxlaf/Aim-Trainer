@@ -62,8 +62,8 @@ function clearWindow() {
 var targets = [];
 
 // fill targets array
-for (var i = 0; i < 1; i++) {
-    targets.push(new Target(0, 0, 0.05, uniform() * 5, uniform() * 5));
+for (var i = 0; i < 2; i++) {
+    targets.push(new Target(uniform() / 10, uniform() / 10, 0.05, uniform() * 5, uniform() * 5));
 }
 
 function tick() {
