@@ -28,10 +28,12 @@ function tick() {
 }
 
 canvas.addEventListener("click", function (event) {
-    // draw a new tracer on click
+    // draw a new tracer where the mouse click was
     tracers.push(new Tracer(((event.clientX / canvas.width) * 2) - 1, 1 - (event.clientY / canvas.height) * 2, 0.005, 0.05));
 
-    // Check if the click is inside any target
+    new Tracer()
+
+    // check if the click position was inside the target
     for (let i = 0; i < targets.length; i++) {
         if (is_click_in_target(event.clientX, event.clientY, targets[i], canvas)) {
             targets.splice(i, 1);
