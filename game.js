@@ -18,6 +18,15 @@ class Target {
     }
 }
 
+function handle_border_collision(target) {
+    if (target.x + target.radius > 1 || target.x - target.radius < -1) {
+        target.vx *= -1
+    }
+    if (target.y + target.radius > 1 || target.y - target.radius < -1) {
+        target.vy *= -1
+    }
+}
+
 // Get the canvas element
 var canvas = document.getElementById('myCanvas');
 
@@ -54,7 +63,7 @@ var targets = [];
 
 // fill targets array
 for (var i = 0; i < 1; i++) {
-    targets.push(new Target(0, 0, 0.05, 0.01, 0.01))
+    targets.push(new Target(0, 0, 0.05, uniform() * 5, uniform() * 5));
 }
 
 function tick() {
@@ -65,12 +74,29 @@ function tick() {
 
     // draw targets
     for (var i = 0; i < targets.length; i++) {
-        targets[i].tick(1, 1, 0.001);
         drawTarget(targets[i], "black");
+        handle_border_collision(targets[i]);
+        targets[i].tick(0, 0, 0.001);
     }
 
     requestAnimationFrame(tick);
 }
+
+canvas.addEventListener("click", function (event) {
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+
+    // Check if the click is inside any target
+    for (let i = 0; i < targets.length; i++) {
+        const mx = ((targets[i].x + 1) / 2) * canvas.width;
+        const my = canvas.height - ((targets[i].y + 1) / 2) * canvas.height;
+        const mradius = (targets[i].radius / 2) * canvas.width;
+
+        if (mouseX >= mx - mradius && mouseX <= mx + mradius && mouseY >= my - mradius && mouseY <= my + mradius) {
+            targets.splice(i, 1);
+        }
+    }
+});
 
 // dynamically resize the canvas whenever the window is changed
 window.addEventListener("resize", setCanvasSize);
