@@ -18,8 +18,27 @@ class Target {
     }
 }
 
+class Tracer {
+    constructor(x, y, start_radius, end_radius) {
+        this.x = x;
+        this.y = y;
+        this.cur_radius = start_radius;
+        this.end_radius = end_radius;
+    }
+
+    tick(radius_step, delta_t) {
+        if (this.cur_radius > this.end_radius) {
+            console.log("delete!");
+            return true;
+        } else {
+            this.cur_radius += radius_step * delta_t;
+            return false;
+        }
+    }
+}
+
 function handle_border_collision(target) {
-    if (target.x + target.radius > 1 || target.x - target.radius < -1) {
+    if (target.x + target.radius > 1 || target.x - target.radius < -1) { 
         target.vx *= -1
     }
     if (target.y + target.radius > 1 || target.y - target.radius < -1) {
@@ -34,7 +53,7 @@ var canvas = document.getElementById('myCanvas');
 var context = canvas.getContext('2d');
 
 function uniform() {
-    return Math.floor(Math.random() * 3) - 1;
+    return Math.random() * 3 - 1;
 }
 
 function setCanvasSize() {
@@ -55,11 +74,27 @@ function drawTarget(target, color) {
     context.closePath();
 }
 
+function drawTracer(tracer, color) {
+    // position mapping
+    const mx = ((tracer.x + 1) / 2) * canvas.width;
+    const my = canvas.height - ((tracer.y + 1) / 2) * canvas.height;
+    const outerRadius = (tracer.cur_radius / 2) * canvas.width;
+    const innerRadius = outerRadius - 1; // Adjust the width of the ring as needed
+
+    context.beginPath();
+    context.arc(mx, my, outerRadius, 0, 2 * Math.PI, false);
+    context.arc(mx, my, innerRadius, 0, 2 * Math.PI, true); // Draw the inner arc in the opposite direction
+    context.fillStyle = color;
+    context.fill();
+    context.closePath();
+}
+
 function clearWindow() {
     context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 var targets = [];
+var tracers = [];
 
 // fill targets array
 for (var i = 0; i < 2; i++) {
@@ -79,12 +114,23 @@ function tick() {
         targets[i].tick(0, 0, 0.001);
     }
 
+    // draw tracers
+    for (var i = 0; i < tracers.length; i++) {
+        console.log("drawing tracer");
+        drawTracer(tracers[i], "red");
+        if (tracers[i].tick(0.1, 0.01) === true) {
+            tracers.splice(i, 1);
+        }
+    }
+
     requestAnimationFrame(tick);
 }
 
 canvas.addEventListener("click", function (event) {
     const mouseX = event.clientX;
     const mouseY = event.clientY;
+
+    tracers.push(new Tracer(((event.clientX / canvas.width) * 2) - 1, 1 - (event.clientY / canvas.height) * 2, 0.005, 0.05));
 
     // Check if the click is inside any target
     for (let i = 0; i < targets.length; i++) {
