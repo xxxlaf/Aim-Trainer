@@ -1,4 +1,5 @@
 import { map_x, map_y, map_radius } from "./utility_mapping.js";
+import { handle_border_collision } from "./utility_functions.js";
 
 export function drawTarget(target, color, canvas, context) {
     context.beginPath();
@@ -15,4 +16,21 @@ export function drawTracer(tracer, color, canvas, context) {
     context.fillStyle = color;
     context.fill();
     context.closePath();
+}
+
+export function renderTargets(targets, color, Fx, Fy, delta_t, canvas, context) {
+    for (var i = 0; i < targets.length; i++) {
+        drawTarget(targets[i], color, canvas, context);
+        handle_border_collision(targets[i]);
+        targets[i].tick(Fx, Fy, delta_t);
+    }
+}
+
+export function renderTracers(tracers, color, radius_step, delta_t, canvas, context) {
+    for (var i = 0; i < tracers.length; i++) {
+        drawTracer(tracers[i], color, canvas, context);
+        if (tracers[i].tick(radius_step, delta_t) === true) {
+            tracers.splice(i, 1);
+        }
+    }
 }

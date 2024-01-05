@@ -1,31 +1,29 @@
 import { Tracer } from "./classes/class_tracer.js";
-import { drawTarget, drawTracer } from "./utilities/utility_drawing.js";
-import { handle_border_collision, generate_targets, is_click_in_target } from "./utilities/utility_functions.js";
+import { renderTargets, renderTracers } from "./utilities/utility_drawing.js";
+import { generate_targets, is_click_in_target } from "./utilities/utility_functions.js";
 import { setCanvasSize, clearWindow } from "./utilities/utility_canvas.js";
 
+// get the canvas element for rendering the drawings
 var canvas = document.getElementById('canvas-api canvas');
 var context = canvas.getContext('2d');
 
+// create targets and tracers arrays for target and tracer tracking
 var targets = generate_targets(3);
 var tracers = [];
 
+// a recursively called function
+// this is where all of the game logic occurs
 function tick() {
+    // "refresh" the screen
     clearWindow(canvas, context);
 
-    for (var i = 0; i < targets.length; i++) {
-        drawTarget(targets[i], "black", canvas, context);
-        handle_border_collision(targets[i]);
-        targets[i].tick(0, 0, 0.001);
-    }
+    // draw all of the targets
+    renderTargets(targets, "black", 0, 0, 0.001, canvas, context);
 
-    for (var i = 0; i < tracers.length; i++) {
-        console.log("drawing tracer");
-        drawTracer(tracers[i], "red", canvas, context);
-        if (tracers[i].tick(0.1, 0.01) === true) {
-            tracers.splice(i, 1);
-        }
-    }
-    
+    // draw all of the tracer
+    renderTracers(tracers, "red", 0.1, 0.01, canvas, context);
+
+    // not exactly sure what this function does, but it just calls the function again per frame (I'm just guessing)
     requestAnimationFrame(tick);
 }
 
@@ -43,5 +41,5 @@ canvas.addEventListener("click", function (event) {
 
 // dynamically resize the canvas whenever the window is changed
 window.addEventListener("resize", setCanvasSize(canvas));
-setCanvasSize(canvas, context);
+setCanvasSize(canvas);
 tick();
