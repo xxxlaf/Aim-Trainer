@@ -20,9 +20,7 @@ var targetsHit = 0;
 
 // update the click count on the screen
 function updateDisplay() {
-    context.fillStyle = "black";
-    context.font = "20px Arial";
-    context.fillText(`Current Level: ${current_level} ... Clicks/Targets Hit: ${targetsHit}/${clickCount}`, 10, 30);
+    
 }
 
 // a recursively called function

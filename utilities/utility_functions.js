@@ -35,7 +35,7 @@ export function generate_targets(target_count, radius_min, radius_max, v_min, v_
     for (var i = 0; i < target_count; i++) {
         targets.push(new Target(uniform(-1, 1) / 2,                     // x
             uniform(-1, 1) / 2,                                         // y
-            uniform(radius_min, radius_max) / 10,                       // radius
+            uniform(radius_min + 1, radius_max + 1) / 25,                      // radius
             uniform(-uniform(v_min, v_max), uniform(v_min, v_max)),     // vx
             uniform(-uniform(v_min, v_max), uniform(v_min, v_max))));   // vy
         
