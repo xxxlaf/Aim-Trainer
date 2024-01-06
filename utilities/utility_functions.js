@@ -2,11 +2,13 @@ import { Target } from "../classes/class_target.js";
 import { map_x, map_y, map_radius } from "./utility_mapping.js";
 
 /**
- * Generates a random number between -1 and 2.
- * @returns {number} A random number between -1 and 2.
+ * Generates a random number between min and max (inclusive).
+ * @param {number} min The minimum value.
+ * @param {number} max The maximum value.
+ * @returns {number} A random number between min and max (inclusive).
  */
-export function uniform() {
-    return Math.random() * 3 - 1;
+export function uniform(min, max) {
+    return Math.random() * (max - min + 1) + min;
 }
 
 /**
@@ -27,11 +29,17 @@ export function handle_border_collision(target) {
  * @param {number} target_count The number of target objects to generate.
  * @returns {Target[]} An array containing the generated target objects.
  */
-export function generate_targets(target_count) {
+export function generate_targets(target_count, radius_min, radius_max, v_min, v_max) {
     var targets = [];
 
     for (var i = 0; i < target_count; i++) {
-        targets.push(new Target(uniform() / 10, uniform() / 10, 0.05, uniform() * 5, uniform() * 5));
+        targets.push(new Target(uniform(-1, 1) / 2,                     // x
+            uniform(-1, 1) / 2,                                         // y
+            uniform(radius_min, radius_max) / 10,                       // radius
+            uniform(-uniform(v_min, v_max), uniform(v_min, v_max)),     // vx
+            uniform(-uniform(v_min, v_max), uniform(v_min, v_max))));   // vy
+        
+        console.log(targets[i]);
     }
 
     return targets;

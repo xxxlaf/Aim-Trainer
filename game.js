@@ -1,14 +1,17 @@
 import { Tracer } from "./classes/class_tracer.js";
 import { renderTargets, renderTracers } from "./utilities/utility_drawing.js";
-import { generate_targets, is_click_in_target } from "./utilities/utility_functions.js";
+import { is_click_in_target } from "./utilities/utility_functions.js";
 import { setCanvasSize, clearWindow } from "./utilities/utility_canvas.js";
+import { generate_targets_by_level } from "./utilities/utility_game.js";
 
 // get the canvas element for rendering the drawings
 var canvas = document.getElementById('canvas-api canvas');
 var context = canvas.getContext('2d');
 
+var current_level = 0;
+
 // create targets and tracers arrays for target and tracer tracking
-var targets = generate_targets(3);
+var targets = generate_targets_by_level(0);
 var tracers = [];
 
 // create a variable to keep track of the click count
@@ -16,10 +19,10 @@ var clickCount = 0;
 var targetsHit = 0;
 
 // update the click count on the screen
-function updateClickCount() {
+function updateDisplay() {
     context.fillStyle = "black";
     context.font = "20px Arial";
-    context.fillText(`Clicks/Targets Hit: ${clickCount}/${targetsHit}`, 10, 30);
+    context.fillText(`Current Level: ${current_level} ... Clicks/Targets Hit: ${targetsHit}/${clickCount}`, 10, 30);
 }
 
 // a recursively called function
@@ -28,13 +31,22 @@ function tick() {
     // "refresh" the screen
     clearWindow(canvas, context);
 
-    // draw all of the targets
-    renderTargets(targets, "black", 2, 2, 0.001, canvas, context);
-
-    // draw all of the tracer
-    renderTracers(tracers, "red", 0.1, 0.01, canvas, context);
-
-    updateClickCount();
+    // sometimes targets length is null and that's not good most of the time
+    if (targets) {
+        if (targets.length > 0) {
+            // draw all of the targets
+            renderTargets(targets, "black", 2, 2, 0.001, canvas, context);
+        } else {
+            targets = generate_targets_by_level(++current_level);
+        }
+    
+        if (tracers.length > 0) {
+            // draw all of the tracer
+            renderTracers(tracers, "red", 0.1, 0.01, canvas, context);
+        }
+    
+        updateDisplay();
+    }
 
     // not exactly sure what this function does, but it just calls the function again per frame (I'm just guessing)
     requestAnimationFrame(tick);
