@@ -69,7 +69,7 @@ function tick() {
     requestAnimationFrame(tick);
 }
 
-canvas.addEventListener("click", function (event) {
+canvas.addEventListener("mousedown", function (event) {
     clickCount++;
     // draw a new tracer where the mouse click was
     tracers.push(new Tracer(((event.clientX / canvas.width) * 2) - 1, 1 - (event.clientY / canvas.height) * 2, 0.005, 0.05));
