@@ -18,9 +18,19 @@ var tracers = [];
 var clickCount = 0;
 var targetsHit = 0;
 
-// update the click count on the screen
 function updateDisplay() {
-    
+    // Display accuracy
+    const accuracy = targetsHit / clickCount * 100 || 0; // Calculate accuracy (avoid division by zero)
+    const accuracyText = `Accuracy: ${accuracy.toFixed(2)}%`;
+
+    // Display current level
+    const levelText = `Level: ${current_level + 1}`;
+
+    // Render the text on the screen
+    context.font = '16px Arial';
+    context.fillStyle = 'black';
+    context.fillText(accuracyText, 10, 20);
+    context.fillText(levelText, 10, 40);
 }
 
 // a recursively called function

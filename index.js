@@ -7,7 +7,6 @@ function SetDefaults() {
 function SetColorMode() {
     if (localStorage.getItem("app color-mode") === "light") {
         document.documentElement.setAttribute("data-bs-theme", "light");
-        
         localStorage.setItem("app color-mode", "light");
     } else {
         document.documentElement.setAttribute("data-bs-theme", "dark");
