@@ -7,6 +7,15 @@ import { generate_targets_by_level } from "./utilities/utility_game.js";
 // get the canvas element for rendering the drawings
 var canvas = document.getElementById('canvas-api canvas');
 var context = canvas.getContext('2d');
+var font_color = "";
+
+if (localStorage.getItem("app color-mode") === "light") {
+    canvas.style.background = "rgb(255, 255, 255)";
+    font_color = "rgb(33, 37, 41)";
+} else {
+    canvas.style.background = "rgb(33, 37, 41)";
+    font_color = "rgb(255, 255, 255)";
+}
 
 var current_level = 0;
 
@@ -28,7 +37,7 @@ function updateDisplay() {
 
     // Render the text on the screen
     context.font = '16px Arial';
-    context.fillStyle = 'black';
+    context.fillStyle = font_color;
     context.fillText(accuracyText, 10, 20);
     context.fillText(levelText, 10, 40);
 }
